@@ -54,12 +54,6 @@
   ul.stays .n { color: var(--muted); font-size: .9rem; }
   ul.stays button { background: none; border: 0; color: var(--red); font-size: 1.3rem; cursor: pointer; padding: 4px 8px; }
   .empty { color: var(--muted); font-style: italic; }
-  table.avail { width: 100%; border-collapse: collapse; }
-  table.avail td { padding: 7px 0; border-top: 1px solid var(--line); }
-  table.avail tr:first-child td { border-top: 0; }
-  table.avail td:last-child { text-align: right; font-weight: 800; white-space: nowrap; }
-  table.avail .c-ok { color: var(--green); } table.avail .c-mid { color: var(--orange); } table.avail .c-no { color: var(--red); }
-  table.avail .sub { color: var(--muted); font-size: .85rem; }
   ul.plans { margin-top: 14px; }
   ul.plans li { flex-direction: column; align-items: stretch; }
   ul.plans .top { display: flex; justify-content: space-between; align-items: center; }
@@ -111,12 +105,6 @@
   </section>
 
   <section class="card">
-    <h2 data-t="availTitle"></h2>
-    <div class="hint" id="availRef" style="margin-top:0"></div>
-    <table class="avail" id="avail"></table>
-  </section>
-
-  <section class="card">
     <h2 data-t="planTitle"></h2>
     <div class="hint" data-t="planIntro" style="margin-top:0"></div>
     <div class="row">
@@ -164,12 +152,6 @@ const T = {
     empty: "Ende asnjë qëndrim. Shto arritjet e fundit që llogaritja të jetë e saktë.",
     stillHere: "ende në Zvicër",
     days: "{n} ditë",
-    availTitle: "Nëse kthehesh në Zvicër…",
-    availFromToday: "Duke nisur nga sot ({d}).",
-    availFromLast: "Pas kthimit të fundit në Kosovë më {d} (duke përfshirë udhëtimet e planifikuara).",
-    availToday: "sot",
-    availIn: "pas {n} ditësh",
-    availCol: "ditë në dispozicion",
     planTitle: "Planifiko udhëtimet e ardhshme",
     planIntro: "Shto udhëtimet që ke ndër mend. Çdo udhëtim llogaritet duke marrë parasysh të mëparshmit.",
     planEntry: "Arritja e planifikuar",
@@ -215,12 +197,6 @@ const T = {
     empty: "Aucun séjour pour l'instant. Ajoute tes dernières arrivées pour un calcul exact.",
     stillHere: "encore en Suisse",
     days: "{n} jours",
-    availTitle: "Si tu reviens en Suisse…",
-    availFromToday: "À partir d'aujourd'hui ({d}).",
-    availFromLast: "Après ton dernier retour au Kosovo le {d} (voyages planifiés compris).",
-    availToday: "aujourd'hui",
-    availIn: "dans {n} jours",
-    availCol: "jours disponibles",
     planTitle: "Planifier les prochains voyages",
     planIntro: "Ajoute les voyages que tu prévois. Chaque voyage est calculé en tenant compte des précédents.",
     planEntry: "Arrivée prévue",
@@ -477,19 +453,6 @@ function render() {
         : `<div class="msg bad">${tj("planOver", { n: r.over, d: fmt(r.lastExit) })}</div>`;
     }
     return `<li><div class="top"><div class="d">${fmt(p.entry)} → ${p.exit ? fmt(p.exit) : "?"}</div><div class="acts">${p.entry <= now ? `<button class="done" onclick="donePlan('${p.id}')">${t("planDone")}</button>` : ""}<button onclick="delPlan('${p.id}')">✕</button></div></div>${body}</li>`;
-  }).join("");
-
-  // Tableau « si tu reviens dans N jours » — après le dernier retour (réel ou planifié)
-  const lastExit = ev.all.reduce((m, s) => (s.exit > m ? s.exit : m), "");
-  const ref = lastExit > now ? lastExit : now;
-  document.getElementById("availRef").textContent = lastExit > now
-    ? t("availFromLast", { d: fmt(lastExit) }) : t("availFromToday", { d: fmt(now) });
-  const offsets = lastExit > now ? [1, 7, 14, 20, 30, 45, 60, 90, 120, 180] : [0, 7, 14, 20, 30, 45, 60, 90, 120, 180];
-  document.getElementById("avail").innerHTML = offsets.map((n) => {
-    const d = addDays(ref, n);
-    const m = maxStayFrom(ev.all, d);
-    const cls = m.days > 30 ? "c-ok" : m.days > 10 ? "c-mid" : "c-no";
-    return `<tr><td>${n === 0 ? t("availToday") : tj("availIn", { n })} <span class="sub">${fmt(d)}</span></td><td class="${cls}">${tj("days", { n: m.days })}</td></tr>`;
   }).join("");
 }
 
