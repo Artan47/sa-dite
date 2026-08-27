@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sa ditë në Zvicër?</title>
+<meta name="description" content="Llogaritësi 90/180 Kosovë → Zvicër · Calculateur 90/180 Kosovo → Suisse">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sa ditë">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23d52b1e'/%3E%3Crect x='13' y='6' width='6' height='20' fill='%23fff'/%3E%3Crect x='6' y='13' width='20' height='6' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #f4f5f8; --card: #fff; --text: #111827; --muted: #6b7280; --line: #e5e7eb;
+    --green: #16a34a; --orange: #ea580c; --red: #dc2626; --blue: #2563eb; --dark: #0f172a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); font-size: 17px; line-height: 1.45; }
+  main { max-width: 520px; margin: 0 auto; padding: 16px 16px 48px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  h1 { font-size: 1.35rem; margin: 0; }
+  h2 { font-size: 1.05rem; margin: 0 0 10px; }
+  .lang button { border: 1px solid var(--line); background: var(--card); padding: 6px 10px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: .9rem; }
+  .lang button.on { background: var(--dark); color: #fff; border-color: var(--dark); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+  .ring { display: flex; flex-direction: column; align-items: center; }
+  .ring .big { font-size: 5rem; font-weight: 800; line-height: 1; }
+  .ring .sub { color: var(--muted); font-weight: 600; margin-top: 2px; }
+  .ring .used { margin-top: 14px; font-weight: 600; }
+  .ring .win { color: var(--muted); font-size: .9rem; text-align: center; }
+  .msg { padding: 14px 16px; border-radius: 12px; margin-bottom: 10px; font-weight: 600; }
+  .msg.ok { background: #dcfce7; color: #14532d; }
+  .msg.warn { background: #ffedd5; color: #7c2d12; }
+  .msg.bad { background: #fee2e2; color: #7f1d1d; }
+  .msg.info { background: #dbeafe; color: #1e3a8a; }
+  .msg small { display: block; font-weight: 500; margin-top: 4px; opacity: .85; }
+  .btn { display: block; width: 100%; padding: 15px; border-radius: 12px; border: 0; font-size: 1.05rem; font-weight: 700; cursor: pointer; }
+  .btn.dark { background: var(--dark); color: #fff; }
+  .btn.light { background: var(--card); border: 2px solid var(--dark); color: var(--dark); }
+  .btn.blue { background: var(--blue); color: #fff; }
+  .row { display: flex; gap: 10px; }
+  .row > * { flex: 1; }
+  label { display: block; font-size: .9rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+  input[type=date] { width: 100%; padding: 11px 12px; font-size: 1rem; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--text); }
+  .field { margin-bottom: 12px; }
+  .hint { color: var(--muted); font-size: .85rem; margin-top: -6px; margin-bottom: 12px; }
+  ul.stays { list-style: none; margin: 0; padding: 0; }
+  ul.stays li { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--line); gap: 10px; }
+  ul.stays li:first-child { border-top: 0; }
+  ul.stays .d { font-weight: 600; }
+  ul.stays .n { color: var(--muted); font-size: .9rem; }
+  ul.stays button { background: none; border: 0; color: var(--red); font-size: 1.3rem; cursor: pointer; padding: 4px 8px; }
+  .empty { color: var(--muted); font-style: italic; }
+  .plan-result { margin-top: 10px; }
+  .foot { color: var(--muted); font-size: .8rem; text-align: center; margin-top: 20px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>🇽🇰 → 🇨🇭 <span data-t="title"></span></h1>
+    <div class="lang">
+      <button id="lang-sq" onclick="setLang('sq')">SQ</button>
+      <button id="lang-fr" onclick="setLang('fr')">FR</button>
+    </div>
+  </header>
+
+  <section class="card ring">
+    <div class="big" id="remaining">90</div>
+    <div class="sub" data-t="remainingLabel"></div>
+    <div class="used" id="usedLine"></div>
+    <div class="win" id="windowLine"></div>
+  </section>
+
+  <div id="messages"></div>
+
+  <div id="quick" class="row" style="margin-bottom:14px"></div>
+
+  <section class="card">
+    <h2 data-t="addTitle"></h2>
+    <div class="field">
+      <label for="entry" data-t="entryLabel"></label>
+      <input type="date" id="entry">
+    </div>
+    <div class="field">
+      <label for="exit" data-t="exitLabel"></label>
+      <input type="date" id="exit">
+    </div>
+    <div class="hint" data-t="exitHint"></div>
+    <div id="formError" class="msg bad" style="display:none"></div>
+    <button class="btn dark" onclick="addStay()" data-t="addBtn"></button>
+  </section>
+
+  <section class="card">
+    <h2 data-t="listTitle"></h2>
+    <ul class="stays" id="list"></ul>
+  </section>
+
+  <section class="card">
+    <h2 data-t="planTitle"></h2>
+    <div class="field">
+      <label for="planDate" data-t="planLabel"></label>
+      <input type="date" id="planDate" oninput="render()">
+    </div>
+    <div id="planResult" class="msg info plan-result"></div>
+  </section>
+
+  <p class="foot" data-t="foot"></p>
+</main>
+
+<script>
+/* ---------- Traductions ---------- */
+const T = {
+  sq: {
+    title: "Sa ditë në Zvicër?",
+    remainingLabel: "ditë të mbetura",
+    used: "{u} nga 90 ditë të përdorura",
+    window: "180 ditët e fundit: {a} – {b}",
+    inside: "Je në Zvicër që nga {d}.",
+    mustLeave: "Duhet të dalësh më së voni më {d} (edhe {n} ditë).",
+    mustLeaveNow: "Duhet të dalësh SOT — nuk ke më ditë të mbetura.",
+    canEnter: "Nëse hyn sot, mund të qëndrosh deri më {d} ({n} ditë).",
+    cannotEnter: "Sot nuk mund të hysh. Hyrja e parë e mundshme: {d}.",
+    fullReset: "Të 90 ditët e plota i ke sërish më {d}.",
+    over: "⚠️ Kufiri 90/180 është tejkaluar që më {d} ({n} ditë tepër).",
+    arrivedToday: "⬇︎ Arrita sot në Zvicër",
+    leftToday: "⬆︎ U ktheva sot në Kosovë",
+    addTitle: "Shto një qëndrim",
+    entryLabel: "Arritja në Zvicër",
+    exitLabel: "Kthimi në Kosovë",
+    exitHint: "Lëre bosh nëse je ende në Zvicër.",
+    addBtn: "Shto",
+    listTitle: "Qëndrimet e regjistruara",
+    empty: "Ende asnjë qëndrim. Shto arritjet e fundit që llogaritja të jetë e saktë.",
+    stillHere: "ende në Zvicër",
+    days: "{n} ditë",
+    planTitle: "Planifiko udhëtimin e ardhshëm",
+    planLabel: "Data e arritjes së ardhshme",
+    planOk: "Nëse arrin më {d}, mund të qëndrosh deri më {e} ({n} ditë).",
+    planNo: "Më {d} nuk mund të hysh. Hyrja e parë e mundshme: {e}.",
+    errEntry: "Shkruaj datën e arritjes.",
+    errOrder: "Data e kthimit është para datës së arritjes.",
+    errOpen: "Ke tashmë një qëndrim të hapur. Mbylle atë më parë.",
+    errFuture: "Data e arritjes është në të ardhmen. Përdor pjesën « Planifiko ».",
+    confirmDel: "Ta fshij këtë qëndrim?",
+    foot: "Rregulli: maksimumi 90 ditë brenda çdo periudhe prej 180 ditësh (neni 6 §1, Kodi i Kufijve Schengen). Dita e hyrjes dhe dita e daljes numërohen të plota. Të dhënat ruhen vetëm në këtë pajisje.",
+    locale: "sq-AL",
+  },
+  fr: {
+    title: "Combien de jours en Suisse ?",
+    remainingLabel: "jours restants",
+    used: "{u} jours sur 90 utilisés",
+    window: "180 derniers jours : {a} – {b}",
+    inside: "Tu es en Suisse depuis le {d}.",
+    mustLeave: "Tu dois sortir au plus tard le {d} (encore {n} jours).",
+    mustLeaveNow: "Tu dois sortir AUJOURD'HUI — plus aucun jour restant.",
+    canEnter: "Si tu entres aujourd'hui, tu peux rester jusqu'au {d} ({n} jours).",
+    cannotEnter: "Tu ne peux pas entrer aujourd'hui. Première entrée possible : {d}.",
+    fullReset: "Tu retrouves tes 90 jours complets le {d}.",
+    over: "⚠️ La limite 90/180 est dépassée depuis le {d} ({n} jours de trop).",
+    arrivedToday: "⬇︎ Arrivé en Suisse aujourd'hui",
+    leftToday: "⬆︎ Rentré au Kosovo aujourd'hui",
+    addTitle: "Ajouter un séjour",
+    entryLabel: "Arrivée en Suisse",
+    exitLabel: "Retour au Kosovo",
+    exitHint: "Laisse vide si tu es encore en Suisse.",
+    addBtn: "Ajouter",
+    listTitle: "Séjours enregistrés",
+    empty: "Aucun séjour pour l'instant. Ajoute tes dernières arrivées pour un calcul exact.",
+    stillHere: "encore en Suisse",
+    days: "{n} jours",
+    planTitle: "Planifier le prochain voyage",
+    planLabel: "Date de la prochaine arrivée",
+    planOk: "Si tu arrives le {d}, tu peux rester jusqu'au {e} ({n} jours).",
+    planNo: "Le {d}, tu ne peux pas entrer. Première entrée possible : {e}.",
+    errEntry: "Indique la date d'arrivée.",
+    errOrder: "La date de retour est avant la date d'arrivée.",
+    errOpen: "Tu as déjà un séjour en cours. Termine-le d'abord.",
+    errFuture: "La date d'arrivée est dans le futur. Utilise la partie « Planifier ».",
+    confirmDel: "Supprimer ce séjour ?",
+    foot: "Règle : maximum 90 jours sur toute période de 180 jours (art. 6 §1, code frontières Schengen). Le jour d'entrée et le jour de sortie comptent en entier. Les données restent uniquement sur cet appareil.",
+    locale: "fr-CH",
+  },
+};
+let lang = localStorage.getItem("sa-dite-lang") || "sq";
+const t = (k, v = {}) => (T[lang][k] || k).replace(/\{(\w+)\}/g, (_, x) => v[x]);
+// Pluriel français : « 1 jour » / « 2 jours » (invariable en albanais).
+const tj = (k, v) => (lang === "fr" && v.n === 1) ? t(k, v).replace(/\bjours\b/, "jour") : t(k, v);
+
+/* ---------- Dates (format ISO « YYYY-MM-DD », calcul en UTC pour éviter tout décalage) ---------- */
+const DAY = 86400000;
+const toUTC = (iso) => { const [y, m, d] = iso.split("-").map(Number); return Date.UTC(y, m - 1, d); };
+const fromUTC = (ms) => new Date(ms).toISOString().slice(0, 10);
+const addDays = (iso, n) => fromUTC(toUTC(iso) + n * DAY);
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
+const fmt = (iso) => { const [y, m, d] = iso.split("-"); return `${d}.${m}.${y}`; };
+const isIso = (s) => /^\d{4}-\d{2}-\d{2}$/.test(s || "");
+
+/* ---------- Règle 90/180 ---------- */
+const MAX = 90, WINDOW = 180, LIMIT = 400;
+
+// Ensemble des jours de présence distincts entre from et to (inclus).
+function presence(stays, from, to) {
+  const set = new Set();
+  for (const s of stays) {
+    const exit = s.exit || to;
+    if (exit < s.entry) continue;
+    const start = s.entry > from ? s.entry : from;
+    const end = exit < to ? exit : to;
+    for (let d = start; d <= end; d = addDays(d, 1)) set.add(d);
+  }
+  return set;
+}
+const usedOn = (stays, day) => presence(stays, addDays(day, -(WINDOW - 1)), day).size;
+const remainingOn = (stays, day) => Math.max(0, MAX - usedOn(stays, day));
+const openStay = (stays, day) => stays.find((s) => !s.exit && s.entry <= day) || null;
+
+// Dernier jour autorisé pour un séjour en cours.
+function mustLeaveBy(stays, day) {
+  const open = openStay(stays, day);
+  if (!open) return null;
+  let last = open.entry;
+  for (let i = 0; i < LIMIT; i++) {
+    const c = addDays(open.entry, i);
+    if (usedOn(stays, c) > MAX) break;
+    last = c;
+  }
+  return last;
+}
+
+// Séjour maximal possible en entrant le jour `entry`.
+function maxStayFrom(stays, entry) {
+  let days = 0, lastExit = addDays(entry, -1);
+  for (let i = 0; i < LIMIT; i++) {
+    const c = addDays(entry, i);
+    if (usedOn([...stays, { entry, exit: c }], c) > MAX) break;
+    days = i + 1; lastExit = c;
+  }
+  return { days, lastExit };
+}
+function earliestReentry(stays, from) {
+  for (let i = 0; i < LIMIT; i++) { const d = addDays(from, i); if (remainingOn(stays, d) >= 1) return d; }
+  return addDays(from, LIMIT);
+}
+function fullReset(stays, from) {
+  for (let i = 0; i < LIMIT; i++) { const d = addDays(from, i); if (usedOn(stays, d) === 0) return d; }
+  return addDays(from, LIMIT);
+}
+function firstOverflow(stays, upTo) {
+  let first = null, over = 0;
+  for (const d of [...presence(stays, "1900-01-01", upTo)].sort()) {
+    const ex = usedOn(stays, d) - MAX;
+    if (ex > 0) { if (!first) first = d; over = Math.max(over, ex); }
+  }
+  return first ? { date: first, over } : null;
+}
+
+/* ---------- Données ---------- */
+const KEY = "sa-dite-stays";
+let stays = [];
+try { stays = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch { stays = []; }
+const save = () => localStorage.setItem(KEY, JSON.stringify(stays));
+
+function setLang(l) { lang = l; localStorage.setItem("sa-dite-lang", l); document.documentElement.lang = l; render(); }
+
+function addStay(entry, exit) {
+  const err = document.getElementById("formError");
+  const fromForm = entry === undefined;
+  if (fromForm) { entry = document.getElementById("entry").value; exit = document.getElementById("exit").value || null; }
+  const now = today();
+  let msg = null;
+  if (!isIso(entry)) msg = t("errEntry");
+  else if (entry > now) msg = t("errFuture");
+  else if (exit && exit < entry) msg = t("errOrder");
+  else if (!exit && openStay(stays, now)) msg = t("errOpen");
+  if (msg) { err.textContent = msg; err.style.display = "block"; return; }
+  err.style.display = "none";
+  stays.push({ id: Date.now().toString(36), entry, exit: exit || null });
+  stays.sort((a, b) => (a.entry < b.entry ? 1 : -1));
+  save();
+  if (fromForm) { document.getElementById("entry").value = ""; document.getElementById("exit").value = ""; }
+  render();
+}
+function closeStay() {
+  const open = openStay(stays, today());
+  if (open) { open.exit = today(); save(); render(); }
+}
+function delStay(id) {
+  if (!confirm(t("confirmDel"))) return;
+  stays = stays.filter((s) => s.id !== id); save(); render();
+}
+
+/* ---------- Affichage ---------- */
+function render() {
+  document.querySelectorAll("[data-t]").forEach((el) => (el.textContent = t(el.dataset.t)));
+  document.getElementById("lang-sq").classList.toggle("on", lang === "sq");
+  document.getElementById("lang-fr").classList.toggle("on", lang === "fr");
+  document.title = t("title");
+
+  const now = today();
+  const used = usedOn(stays, now);
+  const remaining = Math.max(0, MAX - used);
+  const big = document.getElementById("remaining");
+  big.textContent = remaining;
+  big.style.color = remaining > 30 ? "var(--green)" : remaining > 10 ? "var(--orange)" : "var(--red)";
+  document.getElementById("usedLine").textContent = t("used", { u: used });
+  document.getElementById("windowLine").textContent = t("window", { a: fmt(addDays(now, -(WINDOW - 1))), b: fmt(now) });
+
+  // Messages d'état
+  const msgs = [];
+  const over = firstOverflow(stays, now);
+  if (over) msgs.push(`<div class="msg bad">${t("over", { d: fmt(over.date), n: over.over })}</div>`);
+  const open = openStay(stays, now);
+  if (open) {
+    const leave = mustLeaveBy(stays, now);
+    const left = Math.round((toUTC(leave) - toUTC(now)) / DAY);
+    const cls = left > 10 ? "ok" : left > 0 ? "warn" : "bad";
+    msgs.push(`<div class="msg ${cls}">${t("inside", { d: fmt(open.entry) })}<small>${left > 0 ? tj("mustLeave", { d: fmt(leave), n: left }) : t("mustLeaveNow")}</small></div>`);
+  } else {
+    const m = maxStayFrom(stays, now);
+    if (m.days > 0) msgs.push(`<div class="msg ${m.days > 30 ? "ok" : "warn"}">✅ ${tj("canEnter", { d: fmt(m.lastExit), n: m.days })}</div>`);
+    else msgs.push(`<div class="msg bad">⛔ ${t("cannotEnter", { d: fmt(earliestReentry(stays, now)) })}</div>`);
+  }
+  if (used > 0 && !open) msgs.push(`<div class="msg info">🔄 ${t("fullReset", { d: fmt(fullReset(stays, now)) })}</div>`);
+  document.getElementById("messages").innerHTML = msgs.join("");
+
+  // Boutons rapides
+  document.getElementById("quick").innerHTML = open
+    ? `<button class="btn light" onclick="closeStay()">${t("leftToday")}</button>`
+    : `<button class="btn dark" onclick="addStay('${now}', null)">${t("arrivedToday")}</button>`;
+
+  // Liste
+  const list = document.getElementById("list");
+  if (!stays.length) list.innerHTML = `<li class="empty">${t("empty")}</li>`;
+  else list.innerHTML = stays.map((s) => {
+    const n = Math.round((toUTC(s.exit || now) - toUTC(s.entry)) / DAY) + 1;
+    return `<li><div><div class="d">${fmt(s.entry)} → ${s.exit ? fmt(s.exit) : t("stillHere")}</div><div class="n">${tj("days", { n })}</div></div><button title="✕" onclick="delStay('${s.id}')">✕</button></li>`;
+  }).join("");
+
+  // Planification
+  const pd = document.getElementById("planDate");
+  if (!pd.value) pd.value = now;
+  pd.min = now;
+  const p = isIso(pd.value) ? pd.value : now;
+  // Un séjour encore ouvert est supposé se terminer aujourd'hui pour la simulation.
+  const pm = maxStayFrom(stays.map((s) => (s.exit ? s : { ...s, exit: now })), p);
+  document.getElementById("planResult").className = "msg plan-result " + (pm.days > 0 ? "info" : "bad");
+  document.getElementById("planResult").textContent = pm.days > 0
+    ? tj("planOk", { d: fmt(p), e: fmt(pm.lastExit), n: pm.days })
+    : t("planNo", { d: fmt(p), e: fmt(earliestReentry(stays, p)) });
+}
+
+document.documentElement.lang = lang;
+render();
+</script>
+</body>
+</html>
